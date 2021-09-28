@@ -1,0 +1,145 @@
+﻿@model KULLANICI
+@{
+    Layout = "~/Areas/Admin/Views/Shared/_LayoutAdmin.cshtml";
+}
+
+<!-- Content Header (Page header) -->
+<section class="content-header">
+    <div class="container-fluid">
+        <div class="row mb-2">
+            <div class="col-sm-6">
+                <h1>Kullanıcı Ekle</h1>
+            </div>
+            <div class="col-sm-6">
+                <ol class="breadcrumb float-sm-right">
+                    <li class="breadcrumb-item"><a href="#">Kullanıcı</a></li>
+                    <li class="breadcrumb-item active">Index</li>
+                </ol>
+            </div>
+        </div>
+    </div><!-- /.container-fluid -->
+</section>
+
+<section class="content">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-12">
+                <div class="card card-primary">
+                    <form id="formKullanici">
+                        <div class="card-body">
+                            <div class="form-group">
+                                <label for="RolID">Rol Adı</label>
+                                <select type="text" asp-for="RolID" data-live-search="true" class="form-control selectpicker" id="RolID">
+                                    <option value="0">Seçiniz...</option>
+                                </select>
+                                <span asp-validation-for="RolID"></span>
+                            </div>
+                            <div class="form-group">
+                                <label for="TcNo">T.C. Numarası</label>
+                                <input type="text" asp-for="TcNo" class="form-control" id="TcNo">
+                                <span asp-validation-for="TcNo"></span>
+                            </div>
+                            <div class="form-group">
+                                <label for="AdSoyad">Ad Soyad</label>
+                                <input type="text" asp-for="AdSoyad" class="form-control" id="AdSoyad">
+                                <span asp-validation-for="AdSoyad"></span>
+                            </div>
+                            <div class="form-group">
+                                <label for="Eposta">E-Posta</label>
+                                <input type="email" asp-for="Eposta" class="form-control" id="Eposta">
+                                <span asp-validation-for="Eposta"></span>
+                            </div>
+                            <div class="form-group">
+                                <label for="GsmNo">Telefon Numarası</label>
+                                <input type="number" asp-for="GsmNo" class="form-control" id="GsmNo">
+                                <span asp-validation-for="GsmNo"></span>
+                            </div>
+                            <div class="form-group">
+                                <label for="Kulad">Kullanıcı Adı</label>
+                                <input type="text" asp-for="Kulad" class="form-control" id="Kulad">
+                                <span asp-validation-for="Kulad"></span>
+                            </div>
+                            <div class="form-group">
+                                <label for="Sifre">Şifre</label>
+                                <input type="password" asp-for="Sifre" class="form-control" id="Sifre">
+                                <span asp-validation-for="Sifre"></span>
+                            </div>
+                        </div>
+                        <div class="card-footer">
+                            <button type="button" id="btnKaydet" class="btn btn-primary">Kaydet</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+
+
+<script src="~/lib/jquery/jquery.min.js"></script>
+<script src="~/lib/Jquery-SerializeJSON/jquery.serializejson.js"></script>
+
+<script type="text/javascript">
+    var webUrl;
+    var kulAd;
+    var sifre;
+    $(document).ready(function () {
+
+        webUrl = '@ViewBag.webUrl';
+        kulAd = "asd";
+        sifre = "asd";
+        Rol_Doldur();
+    });
+
+    $("#btnKaydet").click(function () {
+        var _url = webUrl + "Kullanici/Kullanici_Ekle";
+        _url += "?kullaniciAd=" + kulAd + "&sifre=" + sifre;
+        var formData = $("#formKullanici");
+        var _data = JSON.stringify(formData.serializeJSON());
+        console.log(_data);
+        $.ajax({
+            url: _url,
+            type: 'POST',
+            contentType: 'application/json; charset=utf-8',
+            data: _data,
+            dataType: 'json',
+            async: false,
+            success: function (result) {
+                if (result.Durum) {
+                    alert("Kullanıcı Başarılı Bir Şekilde Eklendi.")
+                }
+                else {
+                    alert("Kayıt sırasında hata oluştu.")
+                }
+            },
+            failure: function (er) {
+                alert("Hata oldu");
+            }
+        });
+    });
+
+    function Rol_Doldur() {
+        var _url = webUrl + "KullaniciRol/Kullanici_Rol_Listele";
+
+        $.ajax({
+            type: 'GET',
+            url: _url,
+            data: { kullaniciAd: kulAd, sifre: sifre },
+            dataType: 'json',
+            contentType: 'application/json; charset=utf-8',
+            async: false,
+            success: function (result) {
+                if (result != null && result.Durum && result.Liste != null && result.Liste.length > 0) {
+
+                    for (var j = 0; j < result.Liste.length; j++) {
+                        $('#RolID').append($('<option>', { value: result.Liste[j]["ObjectID"], text: result.Liste[j]["RolAd"] }));
+                    }
+                    $('#RolID').selectpicker('refresh');
+                }
+            },
+            failure: function (er) {
+            }
+        });
+    };
+</script>

@@ -1,0 +1,27 @@
+﻿@model KULLANICI
+@{
+    ViewData["Title"] = "Ana Sayfa";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<nav class="navbar navbar-expand-lg navbar-dark" style="background-color: #F8C814">
+    <a class="navbar-brand" href="#">
+        <img src="~/images/enerjisa-logo-navbar.png" width="30" height="30" class="d-inline-block align-top" alt="" />
+        EnerjiSA
+    </a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav">
+            <li class="nav-item active">
+                <a class="nav-link" href="#">Faturalar</a>
+            </li>
+            @*<li class="nav-item-active">
+                    <a class="nav-link" href="@Url.Action("Dashboard", "Admin")">Admin</a>
+                </li>*@
+        </ul>
+    </div>
+</nav>
+
+

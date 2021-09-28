@@ -1,0 +1,204 @@
+﻿
+@{
+
+    Layout = "~/Areas/Abone/Views/Shared/_LayoutAbone.cshtml";
+}
+
+<section id="tabs" class="project-tab">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-12">
+                <nav>
+                    <div class="nav nav-tabs nav-fill" id="nav-tab" role="tablist">
+                        <a class="nav-item nav-link active" id="nav-tum-tab" data-toggle="tab" href="#nav-tum" role="tab" aria-controls="nav-tum" aria-selected="true">Tüm Faturalar</a>
+                        <a class="nav-item nav-link" id="nav-Odenmis-tab" data-toggle="tab" href="#nav-Odenmis" role="tab" aria-controls="nav-Odenmis" aria-selected="false">Ödenmiş Faturalar</a>
+                        <a class="nav-item nav-link" id="nav-Odenmemis-tab" data-toggle="tab" href="#nav-Odenmemis" role="tab" aria-controls="nav-contact" aria-selected="false">Ödenmemiş Faturalar</a>
+                    </div>
+                </nav>
+                <div class="tab-content" id="nav-tabContent">
+                    <div class="tab-pane fade show active" id="nav-tum" role="tabpanel" aria-labelledby="nav-tum-tab">
+                        <table id="exampletum" class="table table-bordered table-striped" data-toggle="table" data-pagination="false" data-sortable="true"
+                               data-single-select="true" data-click-to-select="true" data-sort-class="table-active" data-buttons-class="info">
+                            <thead>
+                                <tr>
+                                    <th data-field="durum" data-checkbox="true"></th>
+                                    <th data-field="Abone.AboneNo">Abone numarası</th>
+                                    <th data-field="FaturaNo">Fatura numarası</th>
+                                    <th data-field="FaturaSonOdemeTarih">Fatura son ödeme tarihi</th>
+                                    <th data-field="FaturaDonemi">Fatura dönemi</th>
+                                    <th data-field="FaturaTutari">Fatura Tutarı</th>
+                                </tr>
+                            </thead>
+                        </table>
+                    </div>
+                    <div class="tab-pane fade" id="nav-Odenmis" role="tabpanel" aria-labelledby="nav-Odenmis-tab">
+                        <table id="exampleOdenmis" class="table table-bordered table-striped" data-toggle="table" data-pagination="false" data-sortable="true"
+                               data-single-select="true" data-click-to-select="true" data-sort-class="table-active" data-buttons-class="info">
+                            <thead>
+                                <tr>
+                                    <th data-field="durum" data-checkbox="true"></th>
+                                    <th data-field="Abone.AboneNo">Abone numarası</th>
+                                    <th data-field="FaturaNo">Fatura numarası</th>
+                                    <th data-field="FaturaSonOdemeTarih">Fatura son ödeme tarihi</th>
+                                    <th data-field="FaturaDonemi">Fatura dönemi</th>
+                                    <th data-field="FaturaTutari">Fatura Tutarı</th>
+                                </tr>
+                            </thead>
+                        </table>
+                    </div>
+                    <div class="tab-pane fade" id="nav-Odenmemis" role="tabpanel" aria-labelledby="nav-Odenmemis-tab">
+                        <a class="card-title btn btn-primary m-2" type="button" id="btnOde"><i class="fas fa-minus"></i> Fatura Öde </a>
+                        <table id="exampleOdenmemis" class="table table-bordered table-striped" data-toggle="table" data-pagination="false" data-sortable="true"
+                               data-single-select="true" data-click-to-select="true" data-sort-class="table-active" data-buttons-class="info">
+                            <thead>
+                                <tr>
+                                    <th data-field="durum" data-checkbox="true"></th>
+                                    <th data-field="Abone.AboneNo">Abone numarası</th>
+                                    <th data-field="FaturaNo">Fatura numarası</th>
+                                    <th data-field="FaturaSonOdemeTarih">Fatura son ödeme tarihi</th>
+                                    <th data-field="FaturaDonemi">Fatura dönemi</th>
+                                    <th data-field="FaturaTutari">Fatura Tutarı</th>
+                                </tr>
+                            </thead>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+
+<script src="~/lib/jquery/jquery.min.js"></script>
+<script src="~/lib/Jquery-SerializeJSON/jquery.serializejson.js"></script>
+
+
+<script type="text/javascript">
+    var webUrl;
+    var aboneAd;
+    var kulAd;
+    var sifre;
+    $(document).ready(function () {
+        webUrl = '@ViewBag.webUrl';
+        aboneAd= "@ViewBag.userName ";
+        kulAd = "asd";
+
+        sifre = " @ViewBag.password";
+
+        TumFaturalar();
+        OdenmemisFaturalar();
+        OdenmisFaturalar();
+
+
+    });
+
+    function getRowSelections() {
+        return $.map($("#exampleOdenmemis").bootstrapTable('getSelections'), function (row) {
+            return row;
+        });
+    }
+
+    function TumFaturalar() {
+        var _url = webUrl + "Fatura/Fatura_Getir_Abone_Ad_Iliskisel_Tum";
+        $.ajax({
+            type: 'GET',
+            url: _url,
+            data: { aboneAd: aboneAd, kullaniciAd: kulAd, sifre: sifre },
+            dataType: 'json',
+            contentType: 'application/json; charset=utf-8',
+            async: false,
+            success: function (result) {
+                if (result != null && result.Durum && result.Liste != null && result.Liste.length > 0) {
+                    console.log(result.Liste);
+                    $("#exampletum").bootstrapTable('append', result.Liste);
+                    $("#exampletum").bootstrapTable({ data: result.Liste });
+                }
+            },
+            failure: function (er) {
+            }
+        });
+
+    }
+
+    function OdenmisFaturalar() {
+        var _url = webUrl + "Fatura/Fatura_Getir_Abone_Ad_Iliskisel_Odenmis";
+
+        $.ajax({
+            type: 'GET',
+            url: _url,
+            data: { aboneAd: aboneAd, kullaniciAd: kulAd, sifre: sifre },
+            dataType: 'json',
+            contentType: 'application/json; charset=utf-8',
+            async: false,
+            success: function (result) {
+                if (result != null && result.Durum && result.Liste != null && result.Liste.length > 0) {
+                    console.log(result.Liste);
+                    $("#exampleOdenmis").bootstrapTable('append', result.Liste);
+                    $("#exampleOdenmis").bootstrapTable({ data: result.Liste });
+                }
+            },
+            failure: function (er) {
+            }
+        });
+    }
+    function OdenmemisFaturalar() {
+        var _url = webUrl + "Fatura/Fatura_Getir_Abone_Ad_Iliskisel_Odenmemis";
+
+        $.ajax({
+            type: 'GET',
+            url: _url,
+            data: { aboneAd: aboneAd, kullaniciAd: kulAd, sifre: sifre },
+            dataType: 'json',
+            contentType: 'application/json; charset=utf-8',
+            async: false,
+            success: function (result) {
+                if (result != null && result.Durum && result.Liste != null && result.Liste.length > 0) {
+                    console.log(result.Liste);
+                    $("#exampleOdenmemis").bootstrapTable('append', result.Liste);
+                    $("#exampleOdenmemis").bootstrapTable({ data: result.Liste });
+                }
+            },
+            failure: function (er) {
+            }
+        });
+    }
+
+
+    $("#btnOde").click(function () {
+        var selectedRows = getRowSelections();
+        $.each(selectedRows, function (index, value) {
+            selectedItems = value.ObjectID;
+            selectedItemsFaturaNo = value.FaturaNo
+        });
+
+
+        var _url = webUrl + "Tahsilat/Tahsilat_Et_FaturaNo";
+        _url += "?pFaturaNo=" + selectedItemsFaturaNo + "&kullaniciAd=" + kulAd + "&sifre=" + sifre;
+
+        console.log(selectedItemsFaturaNo);
+     
+        $.ajax({
+            async: false,
+            url: _url,
+            type: 'POST',
+            contentType: 'application/json; charset=utf-8',
+            /*data: { pFaturaNo: selectedItemsFaturaNo},*/
+            dataType: 'json',
+            success: function (result) {
+                if (result.Durum) {
+                    alert("Tahsilat başarıyla eklendi.");
+                }
+                else {
+                    alert("Başarısız işlem.");
+                }
+            },
+            failure: function (er) {
+                alert("Hata!!!");
+            }
+        });
+        location.reload();
+    });
+
+
+
+</script>

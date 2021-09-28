@@ -1,0 +1,231 @@
+﻿@model KULLANICI
+@{
+    Layout = "~/Areas/Admin/Views/Shared/_LayoutAdmin.cshtml";
+}
+<section class="content">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-12">
+                <!-- /.card -->
+                <div class="card">
+                    <div class="card-header">
+                        <a href="/Admin/Kullanici/Ekle" class="card-title btn btn-primary mr-2"><i class="fas fa-plus"></i> Kullanıcı Ekle </a>
+                        <a class="card-title btn btn-warning mr-2" type="button" data-toggle="modal" data-target="#exampleModal" id="btnDuzenle"><i class="fas fa-minus"></i> Kullanıcı Düzenle </a>
+                        <a class="card-title btn btn-danger mr-2" type="button" id="btnSil"><i class="fas fa-minus"></i> Kullanıcı Sil </a>
+                    </div>
+                    <div class="card-body">
+                        <table id="example1" class="table table-bordered table-striped" data-toggle="table" data-pagination="false" data-sortable="true"
+                               data-single-select="true" data-click-to-select="true" data-sort-class="table-active" data-buttons-class="info">
+                            <thead>
+                                <tr>
+
+                                    <th data-field="durum" data-checkbox="true"></th>
+                                    <th data-field="AdSoyad">Kullanıcı Rol</th>
+                                    <th data-field="Eposta">E-posta</th>
+                                    <th data-field="GsmNo">Telefon no</th>
+                                    <th data-field="Kulad">Kullanıcı Adı</th>
+                                    <th data-field="Sifre">Sifre</th>
+
+                                </tr>
+                            </thead>
+                        </table>
+                    </div>
+                    <!-- /.card-body -->
+                </div>
+                <!-- /.card -->
+            </div>
+        </div>
+    </div>
+</section>
+
+
+<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Kullanıcı  Düzenle</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form id="formKulDuzelt">
+
+                    @*<div asp-validation-summary="ModelOnly" class="text-danger"></div>*@
+
+                    <input type="hidden" asp-for="ObjectID" class="form-control" />
+                    <input type="hidden" asp-for="RolID" class="form-control" />
+
+                    <div class="form-group">
+                        <label asp-for="TcNo" class="control-label"></label>
+                        <input asp-for="TcNo" class="form-control" id="TcNo" />
+                        <span asp-validation-for="TcNo" class="text-danger"></span>
+                    </div>
+
+
+                    <div class="form-group">
+                        <label asp-for="AdSoyad" class="control-label"></label>
+                        <input asp-for="AdSoyad" class="form-control" id="AdSoyad" />
+                        <span asp-validation-for="AdSoyad" class="text-danger"></span>
+                    </div>
+
+                    <div class="form-group">
+                        <label asp-for="KullaniciRol.RolAd" class="control-label"></label>
+                        <input asp-for="KullaniciRol.RolAd" class="form-control" id="RolAd" readonly/>
+                        <span asp-validation-for="KullaniciRol.RolAd" class="text-danger"></span>
+                    </div>
+
+                    <div class="form-group">
+                        <label asp-for="Eposta" class="control-label"></label>
+                        <input asp-for="Eposta" class="form-control" id="Eposta" />
+                        <span asp-validation-for="Eposta" class="text-danger"></span>
+                    </div>
+
+                    <div class="form-group">
+                        <label asp-for="GsmNo" class="control-label"></label>
+                        <input asp-for="GsmNo" class="form-control" id="GsmNo" />
+                        <span asp-validation-for="GsmNo" class="text-danger"></span>
+                    </div>
+
+                    <div class="form-group">
+                        <label asp-for="Kulad" class="control-label"></label>
+                        <input asp-for="Kulad" class="form-control" id="Kulad" />
+                        <span asp-validation-for="Kulad" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="Sifre" class="control-label"></label>
+                        <input asp-for="Sifre" class="form-control" id="Sifre" />
+                        <span asp-validation-for="Sifre" class="text-danger"></span>
+                    </div>
+
+
+                    <div class="form-group">
+                        <input id="btnDuzenleKaydet" type="button" value="Düzelt" class="btn btn-primary" />
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script src="~/lib/jquery/jquery.min.js"></script>
+<script src="~/lib/Jquery-SerializeJSON/jquery.serializejson.js"></script>
+
+<script type="text/javascript">
+    var webUrl;
+    var kulAd;
+    var sifre;
+
+    $(document).ready(function () {
+        webUrl = '@ViewBag.webUrl';
+        kulAd = "asd";
+        sifre = "asd";
+
+
+        Kullanici_Bilgiler();
+    });
+    
+    function getRowSelections() {
+        return $.map($("#example1").bootstrapTable('getSelections'), function (row) {
+            return row;
+        });
+    }
+    function Kullanici_Bilgiler() {
+        var _url = webUrl + "Kullanici/Kullanici_Listele";
+        _url += "?kullaniciAd=" + kulAd + "&sifre=" + sifre;
+
+        $.ajax({
+            type: 'GET',
+            url: _url,
+            dataType: 'json',
+            contentType: 'application/json; charset=utf-8',
+            async: false,
+            success: function (result) {
+                console.log(result);
+                if (result != null && result.Durum && result.Liste != null && result.Liste.length > 0) {
+
+                    console.log(result.Liste);
+
+                    $("#example1").bootstrapTable('append', result.Liste);
+                    $("#example1").bootstrapTable({ data: result.Liste });
+
+
+                }
+            },
+            failure: function (er) {
+            }
+        });
+    }
+
+    $("#btnDuzenle").click(function () {
+        var selectedRows = getRowSelections();
+        $.each(selectedRows, function (index, value) {
+            selectedItems = value.ObjectID;
+        });
+
+        var _url = webUrl + "Kullanici/Kullanici_Getir_Iliskisel"
+        _url += "?kullaniciAd=" + kulAd + "&sifre=" + sifre;
+
+        $.ajax({
+            type: "GET",
+            url: _url,
+            data: { _refID: selectedItems/*, kullaniciAd: kulAd, sifre: sifre */ },
+            dataType: 'json',
+            contentType: 'application/json; charset=utf-8',
+            success: function (result) {
+                console.log(result);
+                $("#ObjectID").val(result.Nesne.ObjectID);
+                $("#TcNo").val(result.Nesne.TcNo);
+                $("#AdSoyad").val(result.Nesne.AdSoyad);
+                $("#Eposta").val(result.Nesne.Eposta);
+                $("#GsmNo").val(result.Nesne.GsmNo);
+                $("#Kulad").val(result.Nesne.Kulad);
+                $("#Sifre").val(result.Nesne.Sifre);
+                $("#RolID").val(result.Nesne.KullaniciRol.ObjectID);
+                $("#RolAd").val(result.Nesne.KullaniciRol.RolAd);
+            },
+            failure: function (er) {
+            }
+        });
+    });
+
+
+    $("#btnDuzenleKaydet").click(function () {
+
+        var _url = webUrl + "Kullanici/Kullanici_Ekle";
+        _url += "?kullaniciAd=" + kulAd + "&sifre=" + sifre;
+
+        var formData = $("#formKulDuzelt");
+        var _data = JSON.stringify(formData.serializeJSON());
+        console.log(_data);
+
+        $.ajax({
+            type: 'POST',
+            url: _url,
+            async: false,
+            contentType: 'application/json; charset=utf-8',
+            data: _data,
+            dataType: 'json',
+            success: function (result) {
+                if (result.Durum) {
+
+                    alert("Kullanıcı Başarılıyla Güncellendi");
+                }
+                else {
+                    alert("Hatalı İşlem");
+                }
+            },
+
+            failure: function (er) {
+                console.log(er);
+                alert("hatali işlem...")
+            }
+        });
+
+        /*location.reload();*/
+    });
+
+
+
+</script>

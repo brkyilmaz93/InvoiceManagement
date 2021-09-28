@@ -1,0 +1,41 @@
+﻿@model KULLANICI_ROL
+
+
+@{
+    Layout = "~/Areas/Admin/Views/Shared/_LayoutAdmin.cshtml";
+}
+
+
+<section class="content">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-12">
+                <!-- /.card -->
+                <div class="card">
+                    <div class="card-header">
+                        <a href="/Admin/Fatura/Ekle" class="card-title btn btn-primary mr-2"><i class="fas fa-plus"></i> Fatura Ekle </a>
+                        @* <a class="card-title btn btn-warning mr-2" type="button" data-toggle="modal" data-target="#exampleModal" id="btnDuzenle"><i class="fas fa-minus"></i> Fatura Düzenle </a>*@
+                        <a class="card-title btn btn-warning mr-2" type="button" data-toggle="modal" data-target="#exampleModal" id="btnDuzenle"> Fatura Düzenle </a>
+                        <a class="card-title btn btn-danger mr-2" type="button" id="btnSil"><i class="fas fa-minus"></i> Fatura Sil </a>
+                    </div>
+                    <div class="card-body">
+                        <table id="example1" class="table table-bordered table-striped" data-toggle="table" data-pagination="false" data-sortable="true"
+                               data-single-select="true" data-click-to-select="true" data-sort-class="table-active" data-buttons-class="info">
+                            <thead>
+                                <tr>
+                                    <th data-field="durum" data-checkbox="true"></th>
+                                    <th data-field="ObjectID">Sıra No</th>
+                                    <th data-field="RolAd">Rol Adı</th>
+                                 
+                                </tr>
+                            </thead>
+                        </table>
+                    </div>
+                    <!-- /.card-body -->
+                </div>
+                <!-- /.card -->
+            </div>
+        </div>
+    </div>
+</section>
+
